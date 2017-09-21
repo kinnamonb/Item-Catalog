@@ -14,6 +14,20 @@ app.add_url_rule(
     methods=['GET']
 )
 
+# Login
+app.add_url_rule(
+    '/login/',
+    view_func=AuthView.as_view('login'),
+    methods=['GET', 'POST']
+)
+
+# Logout
+app.add_url_rule(
+    '/logout/',
+    view_func=AuthView.as_view('logout'),
+    methods=['GET', 'POST']
+)
+
 # Shows all of the categories or creates a new one
 app.add_url_rule(
     '/c/',
