@@ -2,7 +2,7 @@ from flask.views import View
 
 
 class CategoryView(View):
-    ''' Handles /, /c/, and /c/<c_path>/ requests '''
+    ''' Handles Category requests '''
     methods = ['GET', 'POST']
 
     def dispatch_request(self, c_path):

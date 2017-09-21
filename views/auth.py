@@ -2,7 +2,7 @@ from flask.views import View
 
 
 class AuthView(View):
-    ''' Handles /, /c/, and /c/<c_path>/ requests '''
+    ''' Handles authentication requests '''
     methods = ['GET', 'POST']
 
     def dispatch_request(self):

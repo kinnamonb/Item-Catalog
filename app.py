@@ -1,6 +1,8 @@
 from flask import Flask
 
 from views.category import CategoryView
+from views.auth import AuthView
+from views.item import ItemView
 
 
 app = Flask(__name__)
@@ -14,6 +16,63 @@ app.add_url_rule(
     methods=['GET']
 )
 
+# Creates a new category
+app.add_url_rule(
+    '/c/',
+    defaults={'c_path': None},
+    view_func=CategoryView.as_view('cat_new')
+)
+
+# Shows a category
+app.add_url_rule(
+    '/c/<c_path>/',
+    view_func=CategoryView.as_view('cat_read'),
+    methods=['GET']
+)
+
+# Updates a category
+app.add_url_rule(
+    '/c/<c_path>/update/',
+    view_func=CategoryView.as_view('cat_update'),
+    methods=['GET', 'POST']
+)
+
+# Deletes a category
+app.add_url_rule(
+    '/c/<c_path>/delete/',
+    view_func=CategoryView.as_view('cat_delete'),
+    methods=['GET', 'POST']
+)
+
+# Creates a new item
+app.add_url_rule(
+    '/c/<c_path>/i/',
+    defaults={'i_path': None},
+    view_func=ItemView.as_view('item_new'),
+    methods=['GET', 'POST']
+)
+
+# Shows an item
+app.add_url_rule(
+    '/c/<c_path>/i/<i_path>/',
+    view_func=ItemView.as_view('item_read'),
+    methods=['GET']
+)
+
+# Shows an item
+app.add_url_rule(
+    '/c/<c_path>/i/<i_path>/update/',
+    view_func=ItemView.as_view('item_update'),
+    methods=['GET', 'POST']
+)
+
+# Deletes an item
+app.add_url_rule(
+    '/c/<c_path>/i/<i_path>/delete/',
+    view_func=CategoryView.as_view('item_delete'),
+    methods=['GET', 'POST']
+)
+
 # Login
 app.add_url_rule(
     '/login/',
@@ -25,27 +84,5 @@ app.add_url_rule(
 app.add_url_rule(
     '/logout/',
     view_func=AuthView.as_view('logout'),
-    methods=['GET', 'POST']
-)
-
-# Shows all of the categories or creates a new one
-app.add_url_rule(
-    '/c/',
-    defaults={'c_path': None},
-    view_func=CategoryView.as_view('categories'),
-    methods=['GET', 'POST']
-)
-
-# Shows or updates a single category
-app.add_url_rule(
-    '/c/<c_path>',
-    view_func=CategoryView.as_view('category'),
-    methods=['GET', 'POST']
-)
-
-# Deletes a single category
-app.add_url_rule(
-    '/c/<c_path>/delete/',
-    view_func=CategoryView.as_view('cat_delete'),
     methods=['GET', 'POST']
 )
