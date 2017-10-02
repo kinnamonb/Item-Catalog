@@ -7,9 +7,10 @@ from flask import g
 
 
 class PathPart():
-    ''' Handles generating paths for the subclasses '''
+    ''' Adds name and path to the ORM object '''
     path_chars = string.ascii_lowercase + string.digits + '-'
 
+    _name = Column(String(250))
     _path = Column(String(32))
 
     @hybrid_property
@@ -35,3 +36,29 @@ class PathPart():
                              .count()
             p = '{0}-{1}'.format(p, path_count)
         return p
+
+    @hybrid_property
+    def name(self):
+        ''' Retrieves the name of the category '''
+        if self._name is not None:
+            return self._name
+        else:
+            return ''
+
+    @name.setter
+    def name(self, value):
+        ''' Verifies and sets the category name and path '''
+        # A name is required
+        if value is None or value == '':
+            self.errors['name'] = 'A name is required.'
+        # A name can only be 250 characters
+        elif len(value) > 250:
+            self.errors['name'] = 'That name is too long (250 max).'
+        # Everything looks good with the name
+        else:
+            # Delete any associated errors
+            if self.errors.get('name'):
+                del self.errors['name']
+            # Set the name and the path
+            self._name = value
+            self.path = value

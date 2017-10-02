@@ -69,7 +69,7 @@ app.add_url_rule(
 # Deletes an item
 app.add_url_rule(
     '/c/<c_path>/i/<i_path>/delete/',
-    view_func=CategoryView.as_view('item_delete'),
+    view_func=ItemView.as_view('item_delete'),
     methods=['GET', 'POST']
 )
 

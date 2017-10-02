@@ -1,0 +1,12 @@
+{% extends 'category.html' %}
+
+
+{% block cat_content %}
+
+<form method="POST">
+    <p>Are you sure you want to delete the item "{{ item.name }}"?</p>
+    <button type="submit">Yes</button>
+    <a href="{{ url_for('cat_read', c_path=item.category.path, i_path=item.path) }}">No</a>
+</form>
+
+{% endblock %}

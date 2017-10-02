@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, g
 
 from .db_view import DatabaseView
 from db.categories import Categories
+from db.items import Items
 
 
 class CategoryView(DatabaseView):
@@ -14,17 +15,18 @@ class CategoryView(DatabaseView):
         method = request.method
         # Landing
         if path == '/':
-            return render_template('cat_list.html')
-        # Get the new category form
+            items = g.db.query(Items).limit(10).all()
+            return render_template('cat_list.html', items=items)
+        # Create a new category
         elif path == '/c/' and method == 'GET':
             category = Categories()
             return render_template('cat_form.html', category=category)
-        # Process the new category form
         elif path == '/c/' and method == 'POST':
             return self.save_form()
+        # View a category
         elif path == '/c/{0}/'.format(c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return render_template('cat_list.html', category=category)
+            return render_template('cat_list.html', category=category, items=category.items)
         # Update a category
         elif path == '/c/{0}/update/'.format(c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()

@@ -1,0 +1,14 @@
+{% extends 'category.html' %}
+
+
+{% block cat_content %}
+
+<h1>{{ item.name }}</h1>
+<p>
+    <a href="{{ url_for('item_update', c_path=item.category.path, i_path=item.path) }}">Edit</a>
+    <a href="{{ url_for('item_delete', c_path=item.category.path, i_path=item.path) }}">Delete</a>
+</p>
+<img src="{{ item.image }}">
+<p>{{ item.notes }}</p>
+
+{% endblock %}
