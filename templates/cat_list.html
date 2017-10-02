@@ -1,0 +1,14 @@
+{% extends 'category.html' %}
+
+
+{% block cat_content %}
+
+{% if category %}
+    <h1>{{ category.name }}</h1>
+    <a href="{{ url_for('cat_update', c_path=category.path) }}">Edit</a>
+    <a href="{{ url_for('cat_delete', c_path=category.path) }}">Delete</a>
+{% else %}
+    <h1>Latest Items</h1> 
+{% endif %}
+
+{% endblock %}

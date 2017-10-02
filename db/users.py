@@ -11,3 +11,7 @@ class Users(Base):
     # Columns
     id = Column(Integer, primary_key=True)
     name = Column(Text)
+
+    # Relationships
+    items = relationship('Items', back_populates='user')
+    categories = relationship('Categories', back_populates='user')

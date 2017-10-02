@@ -1,7 +1,7 @@
-from flask.views import View
+from .db_view import DatabaseView
 
 
-class ItemView(View):
+class ItemView(DatabaseView):
     ''' Handles Item requests '''
     methods = ['GET', 'POST']
 

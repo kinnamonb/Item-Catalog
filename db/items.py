@@ -18,5 +18,5 @@ class Items(Base):
     image = Column(Text)
 
     # Relationships
-    user = relationship('Users', back_populates('items'))
-    category = relationship('Categories', back_populates('items'))
+    user = relationship('Users', back_populates='items')
+    category = relationship('Categories', back_populates='items')

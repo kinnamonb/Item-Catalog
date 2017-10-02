@@ -1,0 +1,38 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Category</title>
+</head>
+
+<body>
+    
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/c/">New Category</a></li>
+    </ul>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Categories</h2>
+            <ul>
+                {% for c in g.categories %}
+                <li>
+                    <a href="{{ url_for('cat_read', c_path=c.path) }} ">
+                        {{ c.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="cat-content">
+            {% block cat_content %}{% endblock %}
+        </div>
+    </div>
+
+</body>
+
+</html>

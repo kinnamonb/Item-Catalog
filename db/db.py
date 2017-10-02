@@ -2,6 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from . import Base
+from .categories import Categories
+from .items import Items
+from .users import Users
 
 
 class Database():
@@ -34,3 +37,7 @@ class Database():
     def commit(self):
         ''' Commits any pending database transactions '''
         return self.session.commit()
+
+    def delete(self, obj):
+        ''' Deletes an object from the database '''
+        return self.session.delete(obj)

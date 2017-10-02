@@ -1,7 +1,7 @@
-from flask.views import View
+from .db_view import DatabaseView
 
 
-class AuthView(View):
+class AuthView(DatabaseView):
     ''' Handles authentication requests '''
     methods = ['GET', 'POST']
 
