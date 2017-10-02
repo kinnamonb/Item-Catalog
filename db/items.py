@@ -24,6 +24,6 @@ class Items(Base, PathPart, Updatable):
     category = relationship('Categories', back_populates='items')
 
     def __init__(self, **kwargs):
-        super(Items, self).__init__(**kwargs)
         self.notes = ''
         self.image = ''
+        super(Items, self).__init__(**kwargs)

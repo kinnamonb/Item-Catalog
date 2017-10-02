@@ -1,10 +1,11 @@
 import os
 
-from flask import g
+from flask import g, session
 from flask.views import View
 
 from db.db import Database
 from db.categories import Categories
+from db.users import Users
 
 
 class DatabaseView(View):
@@ -15,5 +16,8 @@ class DatabaseView(View):
             g.db = Database(debugging=True)
         else:
             g.db = Database()
+
+        if session.get('user_id'):
+            g.user = g.db.query(Users).get(session['user_id'])
 
         g.categories = g.db.query(Categories).all()

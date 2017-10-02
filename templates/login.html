@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '738987299643145',
+            xfbml: true,
+            version: 'v2.10'
+        });
+        FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div id="signInButton">
+    <p>Login using Google</p>
+    <span class="g-signin" data-scope="openid email profile" data-clientid="7719555388-cqjehr53htj3aecqr0qnc61sq8j61fbp.apps.googleusercontent.com"
+        data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback"
+        data-approvalprompt="force"></span>
+</div>
+
+<div id="g-result"></div>
+
+<div>
+    <p>Login using Facebook</p>
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>
+</div>
+
+<div id="fb-result"></div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="//apis.google.com/js/platform.js?onload=start"></script>
+
+<script>
+    function signInCallback(authResult) {
+        $('#g-result').html('<p>Contacting authentication server...</p>');
+        if (authResult['code']) {
+            $('#signInButton').attr('style', 'display:none;');
+            $.ajax({
+                type: 'POST',
+                url: '{{ url_for("login") }}?provider=google',
+                processData: false,
+                data: authResult['code'],
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function (result) {
+                    if (result) {
+                        $('#g-result').html('<p>Login successful!</p><p>Redirecting...</p>');
+                        window.location.href = "{{ url_for ('landing') }}";
+                    } else if (authResult['error']) {
+                        $('#g-result').html('<p>' + authResult['error'] + '</p>')
+                        console.log('Error: ' + authResult['error']);
+                    } else {
+                        $('#g-result').html('<p>Failed to connect to remote server.</p>')
+                    }
+                }
+            });
+        }
+    }
+</script>
+
+<script>
+    FB.getLoginStatus(function (response) {
+        statusChangeCallback(response);
+    });
+
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    function statusChangeCallback(response) {
+        if (response) {
+            FB.api('/me?fields=name,email', function(data) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url_for("login") }}?&provider=facebook',
+                    processData: false,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        if (result) {
+                            $('#fb-result').html('<p>Login successful!</p><p>Redirecting...</p>');
+                            window.location.href = "{{ url_for('landing') }}";
+                        } else if (response.authResponse.error) {
+                            $('#fb-result').html('<p>' + response.authResponse.error + '</p>');
+                            console.log('Errors: ' + response.authResponse.error);
+                        } else {
+                            $('#fb-result').html('<p>Failed to connect to the remote server.</p>');
+                        }
+                    }
+                })
+            });
+        }
+    }
+</script>
+
+{% endblock %}

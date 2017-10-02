@@ -1,3 +1,6 @@
+import random
+import string
+
 from flask import Flask
 
 from views.category import CategoryView
@@ -6,6 +9,7 @@ from views.item import ItemView
 
 
 app = Flask(__name__)
+app.secret_key = ''.join(random.SystemRandom().choice(string.printable) for _ in range(32))
 
 
 # The root path

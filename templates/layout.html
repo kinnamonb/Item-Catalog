@@ -8,10 +8,14 @@
 </head>
 
 <body>
-    
     <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/c/">New Category</a></li>
+        <li><a href="{{ url_for('landing') }}">Home</a></li>
+        {% if g.user %}
+        <li><a href="{{ url_for('cat_new') }}">New Category</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
     </ul>
 
     <div class="container">
@@ -21,15 +25,15 @@
                 {% for c in g.categories %}
                 <li>
                     <a href="{{ url_for('cat_read', c_path=c.path) }} ">
-                        {{ c.name }}
-                    </a>
+                    {{ c.name }}
+                </a>
                 </li>
                 {% endfor %}
             </ul>
         </div>
 
         <div class="cat-content">
-            {% block cat_content %}{% endblock %}
+            {% block content %}{% endblock %}
         </div>
     </div>
 

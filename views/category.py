@@ -19,10 +19,12 @@ class CategoryView(DatabaseView):
             return render_template('cat_list.html', items=items)
         # Create a new category
         elif path == '/c/' and method == 'GET':
-            category = Categories()
-            return render_template('cat_form.html', category=category)
+            if g.get('user') is not None:
+                category = Categories()
+                return render_template('cat_form.html', category=category)
         elif path == '/c/' and method == 'POST':
-            return self.save_form()
+            if g.get('user') is not None:
+                return self.save_form()
         # View a category
         elif path == '/c/{0}/'.format(c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
@@ -30,19 +32,23 @@ class CategoryView(DatabaseView):
         # Update a category
         elif path == '/c/{0}/update/'.format(c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return render_template('cat_form.html', category=category)
+            if g.get('user') and g.user == category.user:
+                return render_template('cat_form.html', category=category)
         elif path == '/c/{0}/update/'.format(c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return self.save_form(category)
+            if g.get('user') and g.user == category.user:
+                return self.save_form(category)
         # Delete a category
         elif path == '/c/{0}/delete/'.format(c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return render_template('cat_confirm.html', category=category)
+            if g.get('user') and g.user == category.user:
+                return render_template('cat_confirm.html', category=category)
         elif path == '/c/{0}/delete/'.format(c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return self.delete_cat(category)
+            if g.get('user') and g.user == category.user:
+                return self.delete_cat(category)
         # Should never get here, but just in case
-        return render_template('category.html')
+        return render_template('layout.html')
 
     def save_form(self, category=None):
         ''' Creates or updates a Categories object based upon form data '''
@@ -51,6 +57,7 @@ class CategoryView(DatabaseView):
         # If no category was given, make a new one
         if category is None:
             category = Categories(**data)
+            category.user = g.user
         # If a category was given, update it
         else:
             category.update(data)

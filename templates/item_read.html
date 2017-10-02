@@ -1,13 +1,15 @@
-{% extends 'category.html' %}
+{% extends 'layout.html' %}
 
 
-{% block cat_content %}
+{% block content %}
 
 <h1>{{ item.name }}</h1>
+{% if g.user == item.user %}
 <p>
     <a href="{{ url_for('item_update', c_path=item.category.path, i_path=item.path) }}">Edit</a>
     <a href="{{ url_for('item_delete', c_path=item.category.path, i_path=item.path) }}">Delete</a>
 </p>
+{% endif %}
 <img src="{{ item.image }}">
 <p>{{ item.notes }}</p>
 

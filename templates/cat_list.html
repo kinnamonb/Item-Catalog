@@ -1,13 +1,15 @@
-{% extends 'category.html' %}
+{% extends 'layout.html' %}
 
 
-{% block cat_content %}
+{% block content %}
 
 {% if category %}
     <h1>{{ category.name }}</h1>
+    {% if g.user == category.user %}
     <a href="{{ url_for('cat_update', c_path=category.path) }}">Edit</a>
     <a href="{{ url_for('cat_delete', c_path=category.path) }}">Delete</a>
     <a href="{{ url_for('item_new', c_path=category.path) }}">New Item</a>
+    {% endif %}
 {% else %}
     <h1>Latest Items</h1> 
 {% endif %}

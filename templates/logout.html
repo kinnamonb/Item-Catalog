@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+
+<form method="POST">
+    <p>Are you sure you want to logout?</p>
+    <button type="submit">Yes</button>
+    <a href="{{ url_for('landing') }}">No</a>
+</form>
+
+{% endblock %}

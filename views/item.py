@@ -16,10 +16,12 @@ class ItemView(DatabaseView):
         category = g.db.query(Categories).filter_by(path=c_path).first()
         # Create a new item
         if path == '/c/{0}/i/'.format(c_path) and method == 'GET':
-            item = Items()
-            return render_template('item_form.html', item=item)
+            if g.get('user') is not None:
+                item = Items()
+                return render_template('item_form.html', item=item)
         elif path == '/c/{0}/i/'.format(c_path) and method == 'POST':
-            return self.save_form(category)
+            if g.get('user') is not None:
+                return self.save_form(category)
         # View an item
         elif path == '/c/{0}/i/{1}/'.format(c_path, i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
@@ -27,17 +29,22 @@ class ItemView(DatabaseView):
         # Update an item
         elif path == '/c/{0}/i/{1}/update/'.format(c_path, i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            return render_template('item_form.html', item=item)
+            if g.get('user') and g.user == item.user:
+                return render_template('item_form.html', item=item)
         elif path == '/c/{0}/i/{1}/update/'.format(c_path, i_path) and method == 'POST':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            return self.save_form(category, item)
+            if g.get('user') and g.user == item.user:
+                return self.save_form(category, item)
         # Delete an item
         elif path == '/c/{0}/i/{1}/delete/'.format(c_path, i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            return render_template('item_confirm.html', item=item)
+            if g.get('user') and g.user == item.user:
+                return render_template('item_confirm.html', item=item)
         elif path == '/c/{0}/i/{1}/delete/'.format(c_path, i_path) and method == 'POST':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            return self.delete_item(item)
+            if g.get('user') and g.user == item.user:
+                return self.delete_item(item)
+        return render_template('layout.html')
 
     def save_form(self, category, item=None):
         ''' Creates or updates an Item '''
@@ -46,6 +53,7 @@ class ItemView(DatabaseView):
         # If no item was given, make one
         if item is None:
             item = Items(**data)
+            item.user = g.user
         # Otherwise update the item
         else:
             item.update(data)
