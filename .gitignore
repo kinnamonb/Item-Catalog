@@ -102,3 +102,6 @@ ENV/
 
 # sqlite databases
 *.db
+
+# sass-cache
+.sass-cache/
