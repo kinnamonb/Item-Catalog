@@ -14,36 +14,36 @@ class CategoryView(DatabaseView):
         path = request.path
         method = request.method
         # Landing
-        if path == '/':
+        if path == url_for('landing') and method == 'GET':
             items = g.db.query(Items).limit(10).all()
             return render_template('cat_list.html', items=items)
         # Create a new category
-        elif path == '/c/' and method == 'GET':
+        elif path == url_for('cat_new') and method == 'GET':
             if g.get('user') is not None:
                 category = Categories()
                 return render_template('cat_form.html', category=category)
-        elif path == '/c/' and method == 'POST':
+        elif path == url_for('cat_new') and method == 'POST':
             if g.get('user') is not None:
                 return self.save_form()
         # View a category
-        elif path == '/c/{0}/'.format(c_path) and method == 'GET':
+        elif path == url_for('cat_read', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             return render_template('cat_list.html', category=category, items=category.items)
         # Update a category
-        elif path == '/c/{0}/update/'.format(c_path) and method == 'GET':
+        elif path == url_for('cat_update', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
                 return render_template('cat_form.html', category=category)
-        elif path == '/c/{0}/update/'.format(c_path) and method == 'POST':
+        elif path == url_for('cat_update', c_path=c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
                 return self.save_form(category)
         # Delete a category
-        elif path == '/c/{0}/delete/'.format(c_path) and method == 'GET':
+        elif path == url_for('cat_delete', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
                 return render_template('cat_confirm.html', category=category)
-        elif path == '/c/{0}/delete/'.format(c_path) and method == 'POST':
+        elif path == url_for('cat_delete', c_path=c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
                 return self.delete_cat(category)
