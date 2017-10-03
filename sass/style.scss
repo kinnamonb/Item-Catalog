@@ -125,6 +125,7 @@ form {
     .form-group {
         display: flex;
         justify-content: space-between;
+        align-items: flex-end;
         margin: 1em 0;
 
         label {

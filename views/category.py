@@ -19,7 +19,7 @@ class CategoryView(DatabaseView):
         g.state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
         # Landing
         if path == url_for('landing') and method == 'GET':
-            items = g.db.query(Items).limit(9).all()
+            items = g.db.query(Items).order_by(Items.added.desc()).limit(9).all()
             return render_template('cat_list.html', items=items)
         # Create a new category
         elif path == url_for('cat_new') and method == 'GET':

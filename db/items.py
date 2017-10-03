@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -18,6 +19,7 @@ class Items(Base, PathPart, Updatable):
     category_id = Column(Integer, ForeignKey('categories.id'))
     notes = Column(Text)
     image = Column(Text)
+    added = Column(DateTime, server_default=func.now())
 
     # Relationships
     user = relationship('Users', back_populates='items')
