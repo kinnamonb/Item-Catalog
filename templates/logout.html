@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" action="?state={{ g.state }}">
     <p>Are you sure you want to logout?</p>
     <button type="submit">Yes</button>
     <a href="{{ url_for('landing') }}">No</a>

@@ -19,18 +19,23 @@ class AuthView(DatabaseView):
         ''' Handles authentication requests '''
         path = request.path
         method = request.method
+        g.state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
         if session.get('user_id'):
             g.user = g.db.query(Users).get(session['user_id'])
         # Handle logins
         if path == url_for('login') and method == 'GET':
+            session['state'] = g.state  # CSRF protection
             return render_template('login.html')
         elif path == url_for('login') and method == 'POST':
-            return self.handle_login()
+            if request.args.get('state') == session['state']:
+                return self.handle_login()
         # Handle logouts
         elif path == url_for('logout') and method == 'GET':
+            session['state'] = g.state  # CSRF protection
             return render_template('logout.html')
         elif path == url_for('logout') and method == 'POST':
-            return self.handle_logout()
+            if request.args.get('state') == session['state']:
+                return self.handle_logout()
         return render_template('layout.html')
 
     def handle_login(self):

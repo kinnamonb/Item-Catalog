@@ -52,7 +52,7 @@
             $('#signInButton').attr('style', 'display:none;');
             $.ajax({
                 type: 'POST',
-                url: '{{ url_for("login") }}?provider=google',
+                url: '{{ url_for("login") }}?state={{ g.state }}&provider=google',
                 processData: false,
                 data: authResult['code'],
                 contentType: 'application/octet-stream; charset=utf-8',
@@ -88,7 +88,7 @@
             FB.api('/me?fields=name,email', function(data) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url_for("login") }}?&provider=facebook',
+                    url: '{{ url_for("login") }}?state={{ g.state }}&provider=facebook',
                     processData: false,
                     data: JSON.stringify(data),
                     contentType: 'application/json; charset=utf-8',

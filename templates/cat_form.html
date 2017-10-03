@@ -5,7 +5,7 @@
 
 <h1>Category Form</h1>
 
-<form method="POST">
+<form method="POST" action="?state={{ g.state }}">
     <div class="form-group">
         <label for="name">Category Name</label>
         <input type="text" name="name" placeholder="Category name" value="{{ category.name }}">

@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, g
+from flask import render_template, request, redirect, url_for, g, session
 
 from .db_view import DatabaseView
 from db.items import Items
@@ -14,13 +14,15 @@ class ItemView(DatabaseView):
         path = request.path
         method = request.method
         category = g.db.query(Categories).filter_by(path=c_path).first()
+        g.state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
         # Create a new item
         if path == url_for('item_new', c_path=c_path) and method == 'GET':
             if g.get('user') is not None:
+                session['state'] = g.state  # CSRF protection
                 item = Items()
                 return render_template('item_form.html', item=item)
         elif path == url_for('item_new', c_path=c_path) and method == 'POST':
-            if g.get('user') is not None:
+            if g.get('user') is not None and request.args.get('state') == session['state']:
                 return self.save_form(category)
         # View an item
         elif path == url_for('item_read', c_path=c_path, i_path=i_path) and method == 'GET':
@@ -30,19 +32,21 @@ class ItemView(DatabaseView):
         elif path == url_for('item_update', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
             if g.get('user') and g.user == item.user:
+                session['state'] = g.state  # CSRF protection
                 return render_template('item_form.html', item=item)
         elif path == url_for('item_update', c_path=c_path, i_path=i_path) and method == 'POST':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            if g.get('user') and g.user == item.user:
+            if g.get('user') and g.user == item.user and request.args.get('state') == session['state']:
                 return self.save_form(category, item)
         # Delete an item
         elif path == url_for('item_delete', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
             if g.get('user') and g.user == item.user:
+                session['state'] = g.state  # CSRF protection
                 return render_template('item_confirm.html', item=item)
         elif path == url_for('item_delete', c_path=c_path, i_path=i_path) and method == 'POST':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            if g.get('user') and g.user == item.user:
+            if g.get('user') and g.user == item.user and request.args.get('state') == session['state']:
                 return self.delete_item(item)
         return render_template('layout.html')
 

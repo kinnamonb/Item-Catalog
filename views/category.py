@@ -1,4 +1,7 @@
-from flask import render_template, request, redirect, url_for, g
+import random
+import string
+
+from flask import render_template, request, redirect, url_for, g, session
 
 from .db_view import DatabaseView
 from db.categories import Categories
@@ -13,6 +16,7 @@ class CategoryView(DatabaseView):
         ''' Handles all Category requests '''
         path = request.path
         method = request.method
+        g.state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
         # Landing
         if path == url_for('landing') and method == 'GET':
             items = g.db.query(Items).limit(10).all()
@@ -20,10 +24,11 @@ class CategoryView(DatabaseView):
         # Create a new category
         elif path == url_for('cat_new') and method == 'GET':
             if g.get('user') is not None:
+                session['state'] = g.state  # CSRF protection
                 category = Categories()
                 return render_template('cat_form.html', category=category)
         elif path == url_for('cat_new') and method == 'POST':
-            if g.get('user') is not None:
+            if g.get('user') is not None and request.args.get('state') == session['state']:
                 return self.save_form()
         # View a category
         elif path == url_for('cat_read', c_path=c_path) and method == 'GET':
@@ -33,19 +38,21 @@ class CategoryView(DatabaseView):
         elif path == url_for('cat_update', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
+                session['state'] = g.state  # CSRF protection
                 return render_template('cat_form.html', category=category)
         elif path == url_for('cat_update', c_path=c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            if g.get('user') and g.user == category.user:
+            if g.get('user') and g.user == category.user and request.args.get('state') == session['state']:
                 return self.save_form(category)
         # Delete a category
         elif path == url_for('cat_delete', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
             if g.get('user') and g.user == category.user:
+                session['state'] = g.state  # CSRF protection
                 return render_template('cat_confirm.html', category=category)
         elif path == url_for('cat_delete', c_path=c_path) and method == 'POST':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            if g.get('user') and g.user == category.user:
+            if g.get('user') and g.user == category.user and request.args.get('state') == session['state']:
                 return self.delete_cat(category)
         # Should never get here, but just in case
         return render_template('layout.html')
