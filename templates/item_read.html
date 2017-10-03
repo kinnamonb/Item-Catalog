@@ -3,14 +3,22 @@
 
 {% block content %}
 
-<h1>{{ item.name }}</h1>
-{% if g.user == item.user %}
-<p>
-    <a href="{{ url_for('item_update', c_path=item.category.path, i_path=item.path) }}">Edit</a>
-    <a href="{{ url_for('item_delete', c_path=item.category.path, i_path=item.path) }}">Delete</a>
-</p>
+<div class="container-fluid">
+    <h1>{{ item.name }}</h1>
+    {% if g.user == item.user %}
+    <div class="controls">
+        <a href="{{ url_for('item_update', c_path=item.category.path, i_path=item.path) }}">Edit</a>
+        <a href="{{ url_for('item_delete', c_path=item.category.path, i_path=item.path) }}">Delete</a>
+    </div>
+</div>
 {% endif %}
-<img src="{{ item.image }}">
-<p>{{ item.notes }}</p>
+<div class="container-fluid">
+    <div class="sidebar">
+        <img src="{{ item.image }}">
+    </div>
+    <div class="content">
+        <p>{{ item.notes }}</p>
+    </div>
+</div>
 
 {% endblock %}

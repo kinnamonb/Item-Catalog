@@ -25,8 +25,9 @@
     }(document, 'script', 'facebook-jssdk'));
 </script>
 
+<h1>Login using ...</h1>
+
 <div id="signInButton">
-    <p>Login using Google</p>
     <span class="g-signin" data-scope="openid email profile" data-clientid="7719555388-cqjehr53htj3aecqr0qnc61sq8j61fbp.apps.googleusercontent.com"
         data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback"
         data-approvalprompt="force"></span>
@@ -35,7 +36,6 @@
 <div id="g-result"></div>
 
 <div>
-    <p>Login using Facebook</p>
     <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
     </fb:login-button>
 </div>

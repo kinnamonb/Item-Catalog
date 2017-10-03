@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto');
+
+$color-bg: #225378;
+$color-fg: #F3FFE2;
+$color-link: #ACF0F2;
+$color-hi: #EB7F00;
+$color-head: #1695A3;
+
+$font-body: 'Roboto', sans-serif;
+$font-head: 'Open Sans', sans-serif;
+
+
+body {
+    background: $color-bg;
+    color: $color-fg;
+    font-family: $font-body;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-head
+}
+
+a {
+    color: $color-link;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $color-hi;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 960px;
+    margin: 0 auto;
+
+    .sidebar {
+        width: 20%;
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+
+    .content {
+        width: 70%;
+
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-end;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                margin: 0;
+                padding: 0;
+                width: 30%;
+                text-align: center;
+            }
+        }
+        
+        img {
+            width: 100%;
+        }
+    }
+
+    .controls {
+        align-self: center;
+
+        a {
+            padding: 0.25em 0.5em;
+        }
+    }
+}
+
+header {
+    background: $color-head;
+
+    nav {
+    
+        ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+    
+            li {
+                margin: 0;
+                
+                a {
+                    display: inline-block;
+                    padding: 0.75em 0.75em;
+                }
+
+                a:hover {
+                    background: $color-link;
+                }
+            }
+        }
+    }
+}
+
+.container-fluid {
+    @extend .container;
+    width: 100%;
+}
+
+form {
+
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        margin: 1em 0;
+
+        label {
+            width: 20%;
+            text-align: right;
+        }
+
+        input, textarea {
+            width: 75%;
+        }
+
+        textarea {
+            height: 5em;
+        }
+    }
+
+    .form-controls {
+        margin-left: 25%;
+        
+        button {
+            margin-right: 0.75em;
+            cursor: pointer;
+        }
+    }
+}
+
+button, input, textarea {
+    padding: 0.5em;
+    border: 1px solid $color-fg;
+    border-radius: 0.5em;
+    color: $color-fg;
+    background: $color-head;
+    font-family: $font-head;
+}
