@@ -33,7 +33,8 @@ class CategoryView(DatabaseView):
         # View a category
         elif path == url_for('cat_read', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
-            return render_template('cat_list.html', category=category, items=category.items)
+            if category is not None:
+                return render_template('cat_list.html', category=category, items=category.items)
         # Update a category
         elif path == url_for('cat_update', c_path=c_path) and method == 'GET':
             category = g.db.query(Categories).filter_by(path=c_path).first()
@@ -55,7 +56,7 @@ class CategoryView(DatabaseView):
             if g.get('user') and g.user == category.user and request.args.get('state') == session['state']:
                 return self.delete_cat(category)
         # Should never get here, but just in case
-        return render_template('layout.html')
+        return render_template('404.html')
 
     def save_form(self, category=None):
         ''' Creates or updates a Categories object based upon form data '''

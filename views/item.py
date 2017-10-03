@@ -30,7 +30,8 @@ class ItemView(DatabaseView):
         # View an item
         elif path == url_for('item_read', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
-            return render_template('item_read.html', item=item)
+            if item is not None:
+                return render_template('item_read.html', item=item)
         # View an item (JSON)
         elif path == url_for('item_json', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
@@ -55,7 +56,7 @@ class ItemView(DatabaseView):
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
             if g.get('user') and g.user == item.user and request.args.get('state') == session['state']:
                 return self.delete_item(item)
-        return render_template('layout.html')
+        return render_template('404.html')
 
     def save_form(self, category, item=None):
         ''' Creates or updates an Item '''

@@ -1,7 +1,7 @@
 import random
 import string
 
-from flask import Flask
+from flask import Flask, render_template
 
 from views.category import CategoryView
 from views.auth import AuthView
@@ -98,3 +98,8 @@ app.add_url_rule(
     view_func=AuthView.as_view('logout'),
     methods=['GET', 'POST']
 )
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
