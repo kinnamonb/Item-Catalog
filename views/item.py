@@ -1,4 +1,7 @@
-from flask import render_template, request, redirect, url_for, g, session
+import random
+import string
+
+from flask import render_template, request, redirect, url_for, g, session, jsonify
 
 from .db_view import DatabaseView
 from db.items import Items
@@ -28,6 +31,10 @@ class ItemView(DatabaseView):
         elif path == url_for('item_read', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()
             return render_template('item_read.html', item=item)
+        # View an item (JSON)
+        elif path == url_for('item_json', c_path=c_path, i_path=i_path) and method == 'GET':
+            item = g.db.query(Items).filter_by(category=category, path=i_path).first()
+            return jsonify(item=item.serialize)
         # Update an item
         elif path == url_for('item_update', c_path=c_path, i_path=i_path) and method == 'GET':
             item = g.db.query(Items).filter_by(category=category, path=i_path).first()

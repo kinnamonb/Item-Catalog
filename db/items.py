@@ -27,3 +27,13 @@ class Items(Base, PathPart, Updatable):
         self.notes = ''
         self.image = ''
         super(Items, self).__init__(**kwargs)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'image': self.image,
+            'notes': self.notes,
+            'category': self.category.serialize
+        }

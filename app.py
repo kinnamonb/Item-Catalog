@@ -6,6 +6,7 @@ from flask import Flask
 from views.category import CategoryView
 from views.auth import AuthView
 from views.item import ItemView
+from db.items import Items
 
 
 app = Flask(__name__)
@@ -63,7 +64,14 @@ app.add_url_rule(
     methods=['GET']
 )
 
-# Shows an item
+# Shows an item (JSON)
+app.add_url_rule(
+    '/c/<c_path>/i/<i_path>/json',
+    view_func=ItemView.as_view('item_json'),
+    methods=['GET']
+)
+
+# Updates an item
 app.add_url_rule(
     '/c/<c_path>/i/<i_path>/update/',
     view_func=ItemView.as_view('item_update'),

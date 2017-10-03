@@ -18,3 +18,10 @@ class Categories(Base, PathPart, Updatable):
     # Relationships
     user = relationship('Users', back_populates='categories')
     items = relationship('Items', back_populates='category')
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
