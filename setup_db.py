@@ -15,9 +15,5 @@ if __name__ == '__main__':
         db = Database(debugging=True)
         db.setup()
     else:
-        try:
-            os.remove(Database.DB_PROD)
-        except:
-            print('Production database not found.')
         db = Database()
         db.setup()
