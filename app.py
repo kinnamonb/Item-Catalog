@@ -1,5 +1,6 @@
 import random
 import string
+import os
 
 from flask import Flask, render_template
 
@@ -11,6 +12,13 @@ from db.items import Items
 
 app = Flask(__name__)
 app.secret_key = ''.join(random.SystemRandom().choice(string.printable) for _ in range(32))
+
+if not app.debug:
+    import logging
+    from logging import FileHandler
+    file_handler = FileHandler(os.path.join(os.path.dirname(__file__), 'error.log'))
+    file_handler.setLevel(logging.WARNING)
+    app.logger.addHandler(file_handler)
 
 
 # The root path

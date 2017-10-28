@@ -2,6 +2,7 @@ import random
 import string
 import httplib2
 import requests
+import os
 
 from flask import render_template, request, redirect, url_for, g, session, json, flash
 from oauth2client.client import flow_from_clientsecrets
@@ -27,14 +28,14 @@ class AuthView(DatabaseView):
             session['state'] = g.state  # CSRF protection
             return render_template('login.html')
         elif path == url_for('login') and method == 'POST':
-            if request.args.get('state') == session['state']:
+            if request.args.get('state') == session.get('state'):
                 return self.handle_login()
         # Handle logouts
         elif path == url_for('logout') and method == 'GET':
             session['state'] = g.state  # CSRF protection
             return render_template('logout.html')
         elif path == url_for('logout') and method == 'POST':
-            if request.args.get('state') == session['state']:
+            if request.args.get('state') == session.get('state'):
                 return self.handle_logout()
         return render_template('layout.html')
 
@@ -64,7 +65,7 @@ class AuthView(DatabaseView):
         code = request.data
         try:
             oauth_flow = flow_from_clientsecrets(
-                'google_cs.json',
+                os.path.join(os.path.dirname(__file__), '../google_cs.json'),
                 scope=''
             )
             oauth_flow.redirect_uri = 'postmessage'

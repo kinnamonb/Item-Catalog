@@ -12,7 +12,7 @@ from .users import Users
 class Database():
     ''' An interface to the database '''
     DB_DEBUG = 'sqlite:///db/debug.db'
-    DB_PROD = 'postgresql://catalog:{0}@localhost/mydatabase'.format(quote_plus('Udacity FS Items!'))
+    DB_PROD = 'postgresql://catalog:{0}@localhost/catalog'.format('UdacityFSItem5')
 
     def __init__(self, debugging=False):
         ''' Initializes the database session '''
