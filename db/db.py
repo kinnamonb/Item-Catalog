@@ -1,3 +1,5 @@
+from urllib import quote_plus
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -9,16 +11,15 @@ from .users import Users
 
 class Database():
     ''' An interface to the database '''
-    DB_PREFIX = 'sqlite:///'
-    DB_DEBUG = 'db/debug.db'
-    DB_PROD = 'db/db.db'
+    DB_DEBUG = 'sqlite:///db/debug.db'
+    DB_PROD = 'postgresql://catalog:{0}@localhost/mydatabase'.format(quote_plus('Udacity FS Items!'))
 
     def __init__(self, debugging=False):
         ''' Initializes the database session '''
         if debugging:
-            self.engine = create_engine(self.DB_PREFIX + self.DB_DEBUG)
+            self.engine = create_engine(self.DB_DEBUG)
         else:
-            self.engine = create_engine(self.DB_PREFIX + self.DB_PROD)
+            self.engine = create_engine(self.DB_PROD)
         Base.metadata.bind = self.engine
         self.session = sessionmaker(bind=self.engine)()
 
