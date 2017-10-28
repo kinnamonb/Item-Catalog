@@ -1,5 +1,1 @@
-from app import app
-
-
-def application(environ, start_response):
-    app.run()
+from app import app as application
